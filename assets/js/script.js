@@ -12,19 +12,26 @@ var taskFormHandler = function () {
 
     var taskNameInput = document.querySelector("input[name='task-name']").value;
     var taskTypeInput = document.querySelector("select[name='task-type']").value;
-    //check if input values are empty strings
     if (!taskNameInput || !taskTypeInput) {
         alert("You need to fill out the task form!");
         return false;
     }
+
     formEl.reset();
-    //package up data as an object
-    var taskDataObj = {
-        name: taskNameInput,
-        type: taskTypeInput
-    };
-    //send it as an argument to creatTaskEl
-    creatTaskEl(taskDataObj);
+
+    var isEdit = formEl.hasAttribute("data-task-id");
+
+    if (isEdit) {
+        var taskId = formEl.getAttribute("data-task-id");
+        completeEditTask(taskNameInput, taskTypeInput, taskId);
+    } else {
+        var taskDataObj = {
+            name: taskNameInput,
+            type: taskTypeInput
+        };
+
+        creatTaskEl(taskDataObj);
+    }
 }
 
 var creatTaskEl = function (taskDataObj) {
@@ -97,16 +104,16 @@ var taskButtonHandler = function (event) {
         deleteTask(taskId);
     }
 };
-var deleteTask = function(taskId) {
+var deleteTask = function (taskId) {
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     taskSelected.remove();
 };
-var editTask = function(taskId) {
+var editTask = function (taskId) {
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
 
     var taskName = taskSelected.querySelector("h3.task-name").textContent;
-    document.querySelector("input[name='task-name']").value =taskName
-    
+    document.querySelector("input[name='task-name']").value = taskName
+
     var taskType = taskSelected.querySelector("span.task-type").textContent;
     document.querySelector("select[name='task-type']").value = taskType;
 
